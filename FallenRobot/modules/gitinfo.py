@@ -54,5 +54,5 @@ async def github(_, message):
 **Following:** `{following}`
 ⏤͟͟͞͞•𓊈𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 ≛⃝🕊[@Farooq_is_KING](https://t.me/Farooq_is_KING)⛦⃕͜🇮🇳𓊉"""
             except Exception as e:
-                print(str(e))
+                print(e)
     await message.reply_photo(photo=avatar_url, caption=caption)

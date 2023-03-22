@@ -29,23 +29,21 @@ async def _(event):
             )
             end = datetime.now()
             ms = (end - start).seconds
-            h = await event.reply(
-                "Downloaded to {} in {} seconds.".format(downloaded_file_name, ms)
-            )
+            h = await event.reply(f"Downloaded to {downloaded_file_name} in {ms} seconds.")
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
             try:
                 start = datetime.now()
                 media_urls = upload_file(downloaded_file_name)
             except exceptions.TelegraphException as exc:
-                await h.edit("ERROR: " + str(exc))
+                await h.edit(f"ERROR: {str(exc)}")
                 os.remove(downloaded_file_name)
             else:
                 end = datetime.now()
                 (end - start).seconds
                 os.remove(downloaded_file_name)
                 await h.edit(
-                    "Uploaded to https://te.legra.ph{})".format(media_urls[0]),
+                    f"Uploaded to https://te.legra.ph{media_urls[0]})",
                     link_preview=True,
                 )
         elif input_str == "t":
@@ -72,9 +70,7 @@ async def _(event):
             end = datetime.now()
             ms = (end - start).seconds
             await event.reply(
-                "Pasted to https://telegra.ph/{} in {} seconds.".format(
-                    response["path"], ms
-                ),
+                f'Pasted to https://telegra.ph/{response["path"]} in {ms} seconds.',
                 link_preview=True,
             )
     else:

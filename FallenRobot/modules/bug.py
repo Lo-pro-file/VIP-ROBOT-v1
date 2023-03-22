@@ -14,12 +14,11 @@ def content(msg: Message) -> [None, str]:
 
     if msg.text is None:
         return None
-    if " " in text_to_return:
-        try:
-            return msg.text.split(None, 1)[1]
-        except IndexError:
-            return None
-    else:
+    if " " not in text_to_return:
+        return None
+    try:
+        return msg.text.split(None, 1)[1]
+    except IndexError:
         return None
 
 
@@ -33,9 +32,7 @@ async def bug(_, msg: Message):
 
     bugs = content(msg)
     user_id = msg.from_user.id
-    mention = (
-        "[" + msg.from_user.first_name + "](tg://user?id=" + str(msg.from_user.id) + ")"
-    )
+    mention = f"[{msg.from_user.first_name}](tg://user?id={str(msg.from_user.id)})"
     datetimes_fmt = "%d-%m-%Y"
     datetimes = datetime.utcnow().strftime(datetimes_fmt)
 
@@ -62,34 +59,36 @@ async def bug(_, msg: Message):
             return
         else:
             await msg.reply_text("ᴄʜᴜᴍᴛɪʏᴀ ᴏᴡɴᴇʀ!")
-    elif user_id != OWNER_ID:
-        if bugs:
-            await msg.reply_text(
-                f"<b>ʙᴜɢ ʀᴇᴩᴏʀᴛ : {bugs}</b>\n\n"
-                "<b>» ʙᴜɢ sᴜᴄᴄᴇssғᴜʟʟʏ ʀᴇᴩᴏʀᴛᴇᴅ ᴀᴛ sᴜᴩᴩᴏʀᴛ ᴄʜᴀᴛ !</b>",
-                reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data=f"close_reply")]]
-                ),
-            )
-            await pbot.send_photo(
-                SUPPORT_CHAT,
-                photo=START_IMG,
-                caption=f"{bug_report}",
-                reply_markup=InlineKeyboardMarkup(
+    elif bugs:
+        await msg.reply_text(
+            f"<b>ʙᴜɢ ʀᴇᴩᴏʀᴛ : {bugs}</b>\n\n<b>» ʙᴜɢ sᴜᴄᴄᴇssғᴜʟʟʏ ʀᴇᴩᴏʀᴛᴇᴅ ᴀᴛ sᴜᴩᴩᴏʀᴛ ᴄʜᴀᴛ !</b>",
+            reply_markup=InlineKeyboardMarkup(
+                [
                     [
-                        [InlineKeyboardButton("• ᴠɪᴇᴡ ʙᴜɢ •", url=f"{msg.link}")],
-                        [
-                            InlineKeyboardButton(
-                                "• ᴄʟᴏsᴇ •", callback_data="close_send_photo"
-                            )
-                        ],
+                        InlineKeyboardButton(
+                            "• ᴄʟᴏsᴇ •", callback_data="close_reply"
+                        )
                     ]
-                ),
-            )
-        else:
-            await msg.reply_text(
-                f"<b>» ɴᴏ ʙᴜɢ ᴛᴏ ʀᴇᴩᴏʀᴛ !</b>",
-            )
+                ]
+            ),
+        )
+        await pbot.send_photo(
+            SUPPORT_CHAT,
+            photo=START_IMG,
+            caption=f"{bug_report}",
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [InlineKeyboardButton("• ᴠɪᴇᴡ ʙᴜɢ •", url=f"{msg.link}")],
+                    [
+                        InlineKeyboardButton(
+                            "• ᴄʟᴏsᴇ •", callback_data="close_send_photo"
+                        )
+                    ],
+                ]
+            ),
+        )
+    else:
+        await msg.reply_text("<b>» ɴᴏ ʙᴜɢ ᴛᴏ ʀᴇᴩᴏʀᴛ !</b>")
 
 
 @pbot.on_callback_query(filters.regex("close_reply"))

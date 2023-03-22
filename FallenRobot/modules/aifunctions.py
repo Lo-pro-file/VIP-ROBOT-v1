@@ -10,9 +10,7 @@ from FallenRobot.events import register
 @register(pattern="Fallen (.*)")
 async def hmm(event):
     test = event.pattern_match.group(1)
-    r = ('\n    "consent": true,\n    "ip": "::1",\n    "question": "{}"\n').format(
-        test
-    )
+    r = f'\n    "consent": true,\n    "ip": "::1",\n    "question": "{test}"\n'
     k = f"({r})"
     new_string = k.replace("(", "{")
     lol = new_string.replace(")", "}")
